@@ -112,7 +112,7 @@ x0 = np.array([ meas_pos[0], meas_pos[1], meas_pos[2], 0, 0, 0, 0, 0, 0 ]) # x =
 P0 = np.diag([100.0, 100.0, 100.0, 0.01, 0.01, 9.0, 9.0, 9.0, 9.0])
 Q = np.diag([0.01, 0.01, 0.01, 0.001, 0.001, 0.001, 0.01, 0.01, 0.01])
 #ToDo1: Select R
-R = np.zeros(3,3)
+R = np.zeros([3,3])
 alpha = 1*10**(-3)
 kappa = 0
 beta = 2.0
