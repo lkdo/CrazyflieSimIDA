@@ -27,3 +27,4 @@ __copyright__ = "Copyright (C) 2019 Luminita-Cristiana Totu"
 __license__ = "GNU GPLv3"
 
 g = 9.80665
+CMDMAX = 2**16-1

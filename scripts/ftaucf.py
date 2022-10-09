@@ -33,6 +33,7 @@ __license__ = "GNU GPLv3"
 import numpy as np
 import math
 import sys
+from envir import *
 
 #####################################################
 # Julian Foerster's model 
@@ -89,10 +90,10 @@ class QuadFTau_CF:
 		
 		# calculate cT & cQ 
         # Ns = 2000
-        # thrust = np.zeros(65535-Ns)
-        # omegar2 = np.zeros(65535-Ns)
-        # torque = np.zeros(65535-Ns)
-        # for i in range(65535-Ns):
+        # thrust = np.zeros(CMDMAX-Ns)
+        # omegar2 = np.zeros(CMDMAX-Ns)
+        # torque = np.zeros(CMDMAX-Ns)
+        # for i in range(CMDMAX-Ns):
         #     cmd = Ns + i
         #     thrust[i] = self.input2thrust_i(cmd)
         #     omegar2[i] = self.input2omegar_i(cmd)**2
@@ -110,7 +111,7 @@ class QuadFTau_CF:
 		
     
     def input2thrust_i(self, cmd_i):
-        """ Input is 0-65535, output (per rotor thrust) is in Newtons """
+        """ Input is 0-CMDMAX, output (per rotor thrust) is in Newtons """
         if cmd_i < 1000:
             return 0
         return self.input2thrust_poly(cmd_i)
@@ -122,7 +123,7 @@ class QuadFTau_CF:
         return self.thrust2torque_poly(ft_i)
     
     def input2omegar_i(self, cmd_i):    
-        """ Input is 0-65535, rotor angular velocity is in rad/s """
+        """ Input is 0-CMDMAX, rotor angular velocity is in rad/s """
         if cmd_i <= 1000:
             return 0
         else:
@@ -137,7 +138,7 @@ class QuadFTau_CF:
         cmd[2] = self.omegar2input_poly(omegar[2])
         cmd[3] = self.omegar2input_poly(omegar[3])
         cmd[cmd < 0] = 0
-        cmd[cmd > 65535] = 65535
+        cmd[cmd > CMDMAX] = CMDMAX
         return cmd 
     
     def f_aero(self, omegar, vb):
@@ -165,7 +166,7 @@ class QuadFTau_CF:
     ###################################################
         
     def input2ftau(self, cmd, vb):
-        """ cmd is a 4 vector, each with values from 0 to 65535  
+        """ cmd is a 4 vector, each with values from 0 to CMDMAX  
             
                      ^ x-axis
                     (1) CCW
@@ -306,7 +307,7 @@ class QuadFTau_CF_S:
         return np.sqrt(omega_r_square)
     
     def input2omegar_i(self,cmd_i):    
-        """ Input is 0-65535, rotor angular velocity is in rad/s """
+        """ Input is 0-CMDMAX, rotor angular velocity is in rad/s """
         if cmd_i <= 1000:
             return 0
         else:
@@ -328,7 +329,7 @@ class QuadFTau_CF_S:
              cmd[2] = int(self.omegar2input_poly(omegar[2]))
              cmd[3] = int(self.omegar2input_poly(omegar[3]))
              cmd[cmd < 0] = 0
-             cmd[cmd > 65535] = 65535
+             cmd[cmd > CMDMAX] = CMDMAX
         except:
             print("ERROR: ",sys.exc_info()[0],".")
             print("omegar = {},{},{},{}".format(omegar[0],omegar[1],omegar[2],omegar[3]))
@@ -338,14 +339,14 @@ class QuadFTau_CF_S:
     ##############################################################
     
     def input2ftau(self,cmd):
-        """ cmd is a 4 vector, each with values from 0 to 65535  """
+        """ cmd is a 4 vector, each with values from 0 to CMDMAX  """
         
         # basic check 
         for i in range(4):
             if cmd[i]<0:
                 cmd[i]=0
-            elif cmd[i]>2**16-1:
-                cmd[i]=2**16-1
+            elif cmd[i]>CMDMAX:
+                cmd[i]=CMDMAX
             cmd[i]=int(cmd[i])
             
         omegar = self.input2omegar(cmd)

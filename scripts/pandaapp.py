@@ -44,39 +44,111 @@ class ReadKeys(DirectObject.DirectObject):
    
     def __init__(self,ref,ctrl_mode,panda3D_app):
         
-        self.ref = ref # [ thrust, omega_ref[0], omega_ref[1], omega_ref[2]  ]
+        self.ref = ref 
+        # [ thrust1, thrust2, thrust3, thrust4 ]
+        # [ thrust, omega_ref[0], omega_ref[1], omega_ref[2]  ]
+        # [ thrust, R, P, Y ]
+        # [ x, y, z, yaw ]
+        
         self.ctrl_mode = ctrl_mode
         self.panda3D_app = panda3D_app
         self.exitpressed = False
-                
-        self.accept("time-arrow_up", self.call_fw)
-        self.accept("time-arrow_up-repeat", self.call_fw)
-        
-        self.accept("time-arrow_down", self.call_bw)
-        self.accept("time-arrow_down-repeat", self.call_bw)
-        
-        self.accept("time-arrow_left", self.call_left)
-        self.accept("time-arrow_left-repeat", self.call_left)
-        
-        self.accept("time-arrow_right", self.call_right)
-        self.accept("time-arrow_right-repeat", self.call_right)
-        
-        self.accept("time-a", self.call_dz)
-        self.accept("time-a-repeat", self.call_dz)
-        
-        self.accept("time-z", self.call_dz_neg)
-        self.accept("time-z-repeat", self.call_dz_neg)
-        
-        self.accept("time-j",self.call_yaw_cw)
-        self.accept("time-j-repeat",self.call_yaw_cw)
-        
-        self.accept("time-g",self.call_yaw_ccw)
-        self.accept("time-g-repeat",self.call_yaw_ccw)
-        
+
+        if (self.ctrl_mode == 0):
+
+            self.accept("time-q", self.call_T1_up)
+            self.accept("time-q-repeat", self.call_T1_up)
+
+            self.accept("time-a", self.call_T1_down)
+            self.accept("time-a-repeat", self.call_T1_down)
+
+            self.accept("time-w", self.call_T2_up)
+            self.accept("time-w-repeat", self.call_T2_up)
+
+            self.accept("time-s", self.call_T2_down)
+            self.accept("time-s-repeat", self.call_T2_down)
+
+            self.accept("time-e", self.call_T3_up)
+            self.accept("time-e-repeat", self.call_T3_up)
+
+            self.accept("time-d", self.call_T3_down)
+            self.accept("time-d-repeat", self.call_T3_down)
+
+            self.accept("time-r", self.call_T4_up)
+            self.accept("time-r-repeat", self.call_T4_up)
+
+            self.accept("time-f", self.call_T4_down)
+            self.accept("time-f-repeat", self.call_T4_down)
+          
+            self.accept("time-z", self.call_Tall_up)
+            self.accept("time-z-repeat", self.call_Tall_up)
+
+            self.accept("time-x", self.call_Tall_down)
+            self.accept("time-x-repeat", self.call_Tall_down)
+
+        else:
+
+            self.accept("time-arrow_up", self.call_fw)
+            self.accept("time-arrow_up-repeat", self.call_fw)
+          
+            self.accept("time-arrow_down", self.call_bw)
+            self.accept("time-arrow_down-repeat", self.call_bw)
+          
+            self.accept("time-arrow_left", self.call_left)
+            self.accept("time-arrow_left-repeat", self.call_left)
+          
+            self.accept("time-arrow_right", self.call_right)
+            self.accept("time-arrow_right-repeat", self.call_right)
+          
+            self.accept("time-a", self.call_dz)
+            self.accept("time-a-repeat", self.call_dz)
+          
+            self.accept("time-z", self.call_dz_neg)
+            self.accept("time-z-repeat", self.call_dz_neg)
+          
+            self.accept("time-j",self.call_yaw_cw)
+            self.accept("time-j-repeat",self.call_yaw_cw)
+          
+            self.accept("time-g",self.call_yaw_ccw)
+            self.accept("time-g-repeat",self.call_yaw_ccw)
+          
+
         self.accept("time-y",self.call_camera_yaw)
-        
+
         self.accept ("time-escape",self.call_exitpressed)
-        
+    
+    def call_T1_up(self, when):
+        self.ref[0] = int(self.ref[0] + float(envir.CMDMAX)*0.001)
+
+    def call_T1_down(self, when):
+        self.ref[0] = int(self.ref[0] - float(envir.CMDMAX)*0.001)
+
+    def call_T2_up(self, when):
+        self.ref[1] = int(self.ref[1] + float(envir.CMDMAX)*0.001)
+
+    def call_T2_down(self, when):
+        self.ref[1] = int(self.ref[1] - float(envir.CMDMAX)*0.001)
+
+    def call_T3_up(self, when):
+        self.ref[2] = int(self.ref[2] + float(envir.CMDMAX)*0.001)
+
+    def call_T3_down(self, when):
+        self.ref[2] = int(self.ref[2] - float(envir.CMDMAX)*0.001)   
+
+    def call_T4_up(self, when):
+        self.ref[3] = int(self.ref[3] + float(envir.CMDMAX)*0.001)
+
+    def call_T4_down(self, when):
+        self.ref[3] = int(self.ref[3] - float(envir.CMDMAX)*0.001)
+
+    def call_Tall_up(self, when):
+        for i in range(4):
+            self.ref[i] = int(self.ref[i] + float(envir.CMDMAX)*0.001)
+
+    def call_Tall_down(self, when):
+        for i in range(4):
+            self.ref[i] = int(self.ref[i] - float(envir.CMDMAX)*0.001)    
+
     def call_fw(self, when):
         if self.ctrl_mode == 1: 
            self.ref[2] = self.ref[2] + 5*math.pi/180.0
@@ -236,11 +308,14 @@ class Panda3DApp(ShowBase):
         self.textObject_pos_filter = OnscreenText("Position and Attitude (kal) ", pos = (0, +0.7), scale = 0.07,
             fg=(255,255,255,1), bg=(0,0,0,1), mayChange=True, font = monospaced_font)
         if self.ctrl_mode == 1 or self.ctrl_mode ==2 :
-            text = "T={0: 5.3f},R={1: 3.1f},P={2: 3.1f},Y={3: 3.1f}".format(ref[0],
+            text = "REF T={0: 5.3f},R={1: 3.1f},P={2: 3.1f},Y={3: 3.1f}".format(ref[0],
                 ref[1]*180/math.pi,ref[2]*180/math.pi,ref[3]*180/math.pi)
         elif self.ctrl_mode == 3 :
-            text = "X={0: 3.1f},Y={1: 3.1f},Z={2: 3.1f},Y={3: 4.2f}".format(ref[0],
+            text = "REF X={0: 3.1f},Y={1: 3.1f},Z={2: 3.1f},Y={3: 4.2f}".format(ref[0],
                 ref[1],ref[2],ref[3]*180/math.pi)
+        elif self.ctrl_mode == 0:
+            text = "REF CMD1={0: 5.0f},CMD2={1: 5.0f},CMD3={2: 5.0f},CMD4={3: 5.0f}".format(ref[0],
+                ref[1],ref[2],ref[3])
             
         self.textObject_ref = OnscreenText(text, pos = (0, -0.8), scale = 0.07,
             fg=(255,255,255,1), bg=(0,0,0,1), mayChange=True, font = monospaced_font)
@@ -278,13 +353,17 @@ class Panda3DApp(ShowBase):
         elif self.ctrl_mode == 3:
             text = "REF X={0: 3.1f},Y={1: 3.1f},Z={2: 3.1f},Yaw={3: 3.1f}".format(ref[0],
                 ref[1],ref[2],ref[3]*180/math.pi)
+        elif self.ctrl_mode == 0:
+            text = "REF CMD1={0: 5.0f},CMD2={1: 5.0f},CMD3={2: 5.0f},CMD4={3: 5.0f}".format(ref[0],
+                ref[1],ref[2],ref[3])
+        
         self.textObject_ref.text = text
 
 
     def screenText_pos(self,pos,rpy,pos_f,rpy_f):
-         text = "REAL X={0:5.2f},Y={1:5.2f},Z={2:5.2f},RPY={3:5.2f},{4:5.2f},{5:5.2f}".format(
+        text = "REAL X={0:5.2f},Y={1:5.2f},Z={2:5.2f},RPY={3:5.2f},{4:5.2f},{5:5.2f}".format(
             pos[0],pos[1],pos[2],rpy[0]*180/math.pi,rpy[1]*180/math.pi,rpy[2]*180/math.pi)
-         self.textObject_pos.text = text
-         text = "KF   X={0:5.2f},Y={1:5.2f},Z={2:5.2f},RPY={3:5.2f},{4:5.2f},{5:5.2f}".format(
+        self.textObject_pos.text = text
+        text = "KF   X={0:5.2f},Y={1:5.2f},Z={2:5.2f},RPY={3:5.2f},{4:5.2f},{5:5.2f}".format(
             pos_f[0],pos_f[1],pos_f[2],rpy_f[0]*180/math.pi,rpy_f[1]*180/math.pi,rpy_f[2]*180/math.pi)
-         self.textObject_pos_filter.text = text
+        self.textObject_pos_filter.text = text
