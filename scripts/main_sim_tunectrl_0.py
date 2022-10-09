@@ -43,7 +43,7 @@ import mems
 # Main Simulation Parameters
 ############################
 freq_ctrl_rate = 400  # Flight Stab (and raw mems)
-freq_ctrl_angle = 0.5*freq_ctrl_rate # Flight Stab
+freq_ctrl_angle = 100 # Flight Stab
 dt_sim = 1.0/(2*freq_ctrl_rate)  # integration step; has to be bigger than freq_ctrl_rate
 dt_log = 0.1  # logging step
 dt_vis = 1/30 # visualization frame step

@@ -48,7 +48,7 @@ import refs
 ############################
 dt_gps = 1.0/10.0 # GPS meas rate 
 freq_ctrl_rate = 400  # Flight Stab ( and raw mems )
-freq_ctrl_angle = 0.5*freq_ctrl_rate # Flight Stab
+freq_ctrl_angle = 100 # Flight Stab
 freq_ctrl_pos_v = 10  # Pos Control
 freq_ctrl_pos_p = 10  # Pos Control
 dt_sim = 1.0/(2*freq_ctrl_rate)  # integration step; has to be bigger than freq_ctrl_rate
