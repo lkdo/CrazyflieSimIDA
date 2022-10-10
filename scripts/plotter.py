@@ -272,3 +272,68 @@ class Plotter:
         fullname = location + "/" +  log.basename + "__posctrl_pos_ref.png"
         fig.savefig(fullname)
         plt.close(fig)
+
+    def plot_filter(self, log):
+        
+        # saving location 
+        location = log.location 
+        if not os.path.exists(location):
+            os.makedirs(location)
+        
+        # Position plot
+        ################################################
+        fig, ax_lst = plt.subplots(3, 1)
+        fig.suptitle('System Position', fontsize = self.big_font_size)
+        time_rb = np.asarray(log.rb_time)
+        pos_rb = np.asarray(log.rb_pos)
+        
+        time_f = np.asarray(log.rb_time)
+        pos_f = np.asarray(log.rb_pos)
+        
+        ax_lst[0].plot( time_rb, pos_rb[:,0], marker = "o", color='black')
+        ax_lst[0].plot( time_f, pos_f[:,0], marker = "o", color='green' )
+        ax_lst[0].set_title("X-axis")
+        ax_lst[0].set_xlabel('Time [s]');ax_lst[0].set_ylabel('Distance [m]')
+        ax_lst[1].plot( time_rb, pos_rb[:,1], marker = "o", color='black' )
+        ax_lst[1].plot( time_f, pos_f[:,1], marker = "o", color='green' )
+        ax_lst[1].set_title("Y-axis")
+        ax_lst[1].set_xlabel('Time [s]');ax_lst[1].set_ylabel('Distance [m]')
+        ax_lst[2].plot( time_rb, pos_rb[:,2], marker = "o", color='black' ) 
+        ax_lst[2].plot( time_f, pos_f[:,2], marker = "o", color='green' ) 
+        ax_lst[2].set_title("Z-axis")
+        ax_lst[2].set_xlabel('Time [s]');ax_lst[2].set_ylabel('Distance [m]')
+        
+        self.fig_style_1(fig, ax_lst)
+        
+        fullname = location + "/" +  log.basename + "__filter_pos.png"
+        fig.savefig(fullname)
+        plt.close(fig)
+        
+        # Euler Angles plot 
+        ################################################
+        fig, ax_lst = plt.subplots(3, 1)
+        fig.suptitle('Filter Euler-XYZ', fontsize = self.big_font_size)
+        
+        time_rb = np.asarray(log.rb_time)
+        euler_rb = np.asarray(log.rb_euler)
+        time_f = np.asarray(log.filter_time)
+        euler_f = np.asarray(log.filter_euler)
+        
+        ax_lst[0].plot( time_rb, euler_rb[:,0], marker = "o", color='black' )
+        ax_lst[0].plot( time_f, euler_f[:,0], marker = "o", color='green' )
+        ax_lst[0].set_title("Roll - rotation around the X-axis")
+        ax_lst[0].set_xlabel('Time [s]');ax_lst[0].set_ylabel('Angles [$^\circ$]')
+        ax_lst[1].plot( time_rb, euler_rb[:,1], marker = "o", color='black' )
+        ax_lst[1].plot( time_f, euler_f[:,1], marker = "o", color='green' )
+        ax_lst[1].set_title("Pitch - rotation around the Y-axis")
+        ax_lst[1].set_xlabel('Time [s]');ax_lst[1].set_ylabel('Angles [$^\circ$]')
+        ax_lst[2].plot( time_rb, euler_rb[:,2], marker = "o", color='black' )
+        ax_lst[2].plot( time_f, euler_f[:,2], marker = "o", color='green' )
+        ax_lst[2].set_title("Yaw - rotation around the Z-axis")
+        ax_lst[2].set_xlabel('Time [s]');ax_lst[2].set_ylabel('Angles [$^\circ$]')
+        
+        self.fig_style_1(fig, ax_lst)
+        
+        fullname = location + "/" +  log.basename+ "__filter_eulerXYZ.png"
+        fig.savefig(fullname)
+        plt.close(fig)

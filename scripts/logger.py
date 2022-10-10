@@ -60,7 +60,12 @@ class Logger:
         
         self.posctrl_time = []
         self.posctrl_pos_ref = []
-        
+
+        self.filter_time = []
+        self.filter_pos = []
+        self.filter_euler = []
+        self.filter_ve = []
+  
     # rigid body elements 
     ###################################################
     
@@ -215,4 +220,35 @@ class Logger:
                 fullline = c1+"  "+c2+"\n"
                 fullline = str(fullline).replace('[','').replace(']','')
                 f.write(fullline)
+
+    # filter elements 
+    ###################################################
+    
+    def log_filter(self, t, X):
+        # X = [pos,euler,ve]
+        self.filter_time.append(t)
+        self.filter_pos.append(X[0:3])
+        self.filter_euler.append(180/math.pi*X[3:6])
+        self.filter_ve.append(X[6:9])
+
+    def log2file_filter(self):
         
+        location = self.location 
+        if not os.path.exists(location):
+            os.makedirs(location)
+        fullname = location + "/" +  self.basename + "__filter.txt"
+        with open(fullname,"w") as f:
+            f.write("time position euler_xyz ve \n")
+            for i in range(len(self.filter_time)):
+                c1 = np.array2string(np.array([self.filter_time[i]]), precision = 8, 
+                        suppress_small=False, sign=" ",floatmode ="fixed")
+                c2 = np.array2string(self.filter_pos[i], precision = 8, 
+                        suppress_small=False, sign=" ",floatmode ="fixed")
+                c3 = np.array2string(self.filter_euler[i],precision = 8, 
+                        suppress_small=False, sign=" ",floatmode ="fixed")
+                c4 = np.array2string(self.filter_ve[i],precision = 8, 
+                        suppress_small=False, sign=" ",floatmode ="fixed")
+                
+                fullline = c1+"  "+c2+"  "+c3+"  "+c4+"\n"
+                fullline = str(fullline).replace('[','').replace(']','')
+                f.write(fullline)
