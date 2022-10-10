@@ -68,6 +68,15 @@ ab = np.array([0,0,0]) # linear acceleration in body-fixed frame
 qftau = ftaucf.QuadFTau_CF(0,plus) # Model for the forces and torques of the crazyflie (used in simulation)
 qftau_s = ftaucf.QuadFTau_CF_S(qftau.cT, qftau.cQ, qftau.radius, 
     qftau.input2omegar_coeff, plus) # Simplified model for the forces and torques (used in control)
+
+# Add some noise to forces and torque model
+###########################################
+cmd_eq = 37248
+fraction = 0.1
+sigma_ftau = [ fraction*qftau.input2thrust_i(37248), fraction*qftau.thrust2torque_i(qftau.input2thrust_i(37248)),
+    fraction*qftau.input2omegar_i(37248), 0 ]
+qftau.sigma = sigma_ftau
+
 qrb = rigidbody.rigidbody(pos, q, ve, omegab, ab, qftau.mass, qftau.I) # Rigid body motion object
 
 # Initialize MEMS sensors 

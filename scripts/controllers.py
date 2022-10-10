@@ -38,16 +38,16 @@ class AttController_01:
         self.dt_ctrl_rate = 1.0/freq_ctrl_rate
 
         #ToDo0: Tune PIDs 
-        self.pid_rollrate = pid.PID(0, 0, 0, 8*360*math.pi/180,-8*360*math.pi/180, 0.01)
-        self.pid_pitchrate = pid.PID(0, 0, 0, 8*360*math.pi/180,-8*360*math.pi/180, 0.01)
-        self.pid_yawrate = pid.PID(0, 0, 0, 8*360*math.pi/180, -8*360*math.pi/180, 0.01)
+        self.pid_rollrate = pid.PID(50, 0, 0, 8*360*math.pi/180,-8*360*math.pi/180, 0.01)
+        self.pid_pitchrate = pid.PID(50, 0, 0, 8*360*math.pi/180,-8*360*math.pi/180, 0.01)
+        self.pid_yawrate = pid.PID(50, 0, 0, 8*360*math.pi/180, -8*360*math.pi/180, 0.01)
 
         self.dt_ctrl_angle = 1.0/freq_ctrl_angle  
         
         #ToDo0: Tune PIDs 
-        self.pid_pitch = pid.PID(0, 0, 0, 2.5*360*math.pi/180, -2.5*360*math.pi/180, 0.01)
-        self.pid_roll = pid.PID(0, 0, 0, 2.5*360*math.pi/180, -2.5*360*math.pi/180, 0.01)
-        self.pid_yaw = pid.PID(0, 0, 0, 2.5*360*math.pi/180, -2.5*360**math.pi/180, 0.01)
+        self.pid_pitch = pid.PID(4, 0, 0, 2.5*360*math.pi/180, -2.5*360*math.pi/180, 0.01)
+        self.pid_roll = pid.PID(4, 0, 0, 2.5*360*math.pi/180, -2.5*360*math.pi/180, 0.01)
+        self.pid_yaw = pid.PID(3, 0, 0, 2.5*360*math.pi/180, -2.5*360**math.pi/180, 0.01)
 
     def run_rate(self, ref_omegab, meas_omegab, J ):
         
@@ -105,15 +105,15 @@ class PosController_01:
           
         #ToDo2: Tune PIDs 
         # saturation in the directional  way 
-        self.pid_vx = pid.PID(0, 0, 0, 9999, -9999, 0.1)
-        self.pid_vy = pid.PID(0, 0, 0, 9999, -9999, 0.1)
-        self.pid_vz = pid.PID(0, 0, 0, 9999, -9999, 0.1)
+        self.pid_vx = pid.PID(1, 0, 0, 9999, -9999, 0.1)
+        self.pid_vy = pid.PID(1, 0, 0, 9999, -9999, 0.1)
+        self.pid_vz = pid.PID(1, 0, 0, 9999, -9999, 0.1)
 
-        #ToDo2: Tune PIDs 
+        #ToDo2: Tune PIDs
         self.dt_ctrl_pos_p = 1.0/freq_ctrl_pos_p
-        self.pid_x = pid.PID(0, 0, 0, 20, -20, 0.1)
-        self.pid_y = pid.PID(0, 0, 0, 20, -20, 0.1)
-        self.pid_z = pid.PID(0, 0, 3.5, 10, -10, 0.1)
+        self.pid_x = pid.PID(1, 0, 0, 20, -20, 0.1)
+        self.pid_y = pid.PID(1, 0, 0, 20, -20, 0.1)
+        self.pid_z = pid.PID(1, 0, 3.5, 10, -10, 0.1)
 
         self.max_thrust =  0.8*0.638
     
