@@ -103,7 +103,7 @@ ref = np.array([thrust_ref,rpy_ref[0],rpy_ref[1],rpy_ref[2]]) # T, Y, P, R
 
 # Initialize GPS sensors 
 ##########################################################
-sigma_gps = 0.01
+sigma_gps = 0.01 # gnss noise standdard deviation
 meas_pos = qrb.pos + np.random.normal(0, sigma_gps, 3) # GPS first meas
 
 # Initialize UKF (using Euler Angles)
@@ -111,16 +111,16 @@ meas_pos = qrb.pos + np.random.normal(0, sigma_gps, 3) # GPS first meas
 x0 = np.array([ meas_pos[0], meas_pos[1], meas_pos[2], 0, 0, 0, 0, 0, 0 ]) # x = [pos,euler,ve]
 P0 = np.diag([100.0, 100.0, 100.0, 0.01, 0.01, 9.0, 9.0, 9.0, 9.0])
 Q = np.diag([0.01, 0.01, 0.01, 0.001, 0.001, 0.001, 0.01, 0.01, 0.01])
-#ToDo1: Select R
-#R = np.zeros([3,3])
+R = sigma_gps**2*np.diag([1,1,1])
 
 alpha = 1*10**(-3)
 kappa = 0
 beta = 2.0
+sut = spkf.SUT(alpha, beta, kappa, x0.shape[0])
+
 meas_func = lambda x: x[0:3] # we measure only position; omegab and ab are used as inputs for the filter, not states
 dfx = rigidbody.quadrotor_dt_kinematic_euler
 
-sut = spkf.SUT(alpha, beta, kappa, x0.shape[0])
 filter = spkf.SPKF(dfx,meas_func,np.eye(x0.shape[0]),Q,R,x0,P0,sut,variant=1) # IUKF
 
 # Initialize predefined controller references 
@@ -183,7 +183,7 @@ while readkeys.exitpressed is False :
     if abs(t/att_controller.dt_ctrl_angle - round(t/att_controller.dt_ctrl_angle)) < 0.000001 :
          
         # use filter estimates
-        est_rpy = filter.x[3:6]
+        est_rpy = filter.x[3:6] #qrb.rpy
 
         rpy_ref[0] = readkeys.ref[1]
         rpy_ref[1] = readkeys.ref[2]

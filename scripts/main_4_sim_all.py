@@ -120,8 +120,7 @@ meas_pos = qrb.pos + np.random.normal(0, sigma_gps, 3) # GPS first meas
 x0 = np.array([ meas_pos[0], meas_pos[1], meas_pos[2], 0, 0, 0, 0, 0, 0 ]) # x = [pos,euler,ve]
 P0 = np.diag([100.0, 100.0, 100.0, 0.01, 0.01, 9.0, 9.0, 9.0, 9.0])
 Q = np.diag([0.01, 0.01, 0.01, 0.001, 0.001, 0.001, 0.01, 0.01, 0.01])
-#ToDo1: Select R
-#R = np.zeros([3,3])
+R = sigma_gps**2*np.diag([1,1,1])
 
 alpha = 1*10**(-3)
 kappa = 0

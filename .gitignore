@@ -3,8 +3,20 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-docs/
+
 scripts/logs
+pics/
+_minted-*/
+figs/
+*.aux
+*.log
+*.nav
+*.out
+*.tex
+*.toc
+*.epgz
+*.svg
+*.snm
 
 # C extensions
 *.so
